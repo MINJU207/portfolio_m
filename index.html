@@ -3,84 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aethel: AI Synesthesia - 차세대 크리에이티브 전시</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@300;400;500;700&display=swap" rel="stylesheet">
-    
+    <title>Neural Canvas | AI Art Portfolio</title>
     <style>
-        /* ==================================== */
-        /* 1. 기본 스타일 & 폰트 적용 */
-        /* ==================================== */
-        body {
+        /* --- CSS Reset & Variables --- */
+        :root {
+            --bg-color: #050505;
+            --text-color: #ffffff;
+            --primary-color: #00f3ff; /* Neon Cyan */
+            --secondary-color: #bc13fe; /* Neon Purple */
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
             margin: 0;
             padding: 0;
-            background-color: #000000; 
-            color: #EAEAEA; 
-            font-family: 'Rajdhani', sans-serif; /* 본문 폰트 적용 */
+            box-sizing: border-box;
+            cursor: none; /* 커스텀 커서를 위해 기본 커서 숨김 */
+        }
+
+        body {
+            font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             overflow-x: hidden;
-            scroll-behavior: smooth;
+            line-height: 1.6;
         }
 
-        /* 강조 컬러: Subtle Gold */
-        .highlight-text {
-            color: #FFD700; /* Gold */
-            letter-spacing: 1px;
-            font-weight: 500;
+        /* --- Custom Cursor --- */
+        .cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--primary-color);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s, background-color 0.3s;
+            mix-blend-mode: difference;
+        }
+        .cursor.hovered {
+            width: 50px;
+            height: 50px;
+            background-color: rgba(0, 243, 255, 0.2);
+            border-color: var(--secondary-color);
         }
 
-        /* 2. 캔버스 배경 (우주/별똥별) */
-        #star-canvas {
+        /* --- Background Canvas --- */
+        #bg-canvas {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             z-index: -1;
-            opacity: 1; 
+            background: radial-gradient(circle at center, #1a1a2e 0%, #000000 100%);
         }
 
-        /* 3. 레이아웃 & 섹션 스타일 */
-        header {
-            position: sticky;
-            top: 0;
-            background: rgba(0, 0, 0, 0.9);
-            padding: 15px 50px;
-            z-index: 10;
-            border-bottom: 1px solid rgba(255, 215, 0, 0.2); 
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        header .logo {
-            font-size: 1.8em;
-            font-weight: 400;
-            color: #FFD700;
-            font-family: 'Orbitron', sans-serif; /* 로고 폰트 적용 */
-        }
-
-        nav a {
-            color: #C0C0C0;
-            text-decoration: none;
-            margin-left: 30px;
-            transition: color 0.3s, border-bottom 0.3s;
-            font-weight: 400;
-        }
-
-        nav a:hover {
-            color: #FFFFFF;
-            border-bottom: 1px solid #FFD700;
-        }
-
+        /* --- Layout & Typography --- */
         .container {
-            width: 90%;
             max-width: 1200px;
             margin: 0 auto;
-            padding: 120px 0;
+            padding: 0 2rem;
             position: relative;
+            z-index: 1;
         }
 
-        /* Hero Section */
+        h1, h2, h3 {
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .section-title {
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 4rem;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            opacity: 0; /* 스크롤 애니메이션 초기 상태 */
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        /* --- Hero Section --- */
         #hero {
             height: 100vh;
             display: flex;
@@ -88,365 +95,393 @@
             justify-content: center;
             align-items: center;
             text-align: center;
-            background: none;
         }
 
-        #hero h1 {
-            font-size: 5em;
-            margin-bottom: 20px;
-            color: #FFFFFF;
-            letter-spacing: 15px; /* 더 넓은 간격으로 간지 강조 */
-            font-weight: 700;
-            font-family: 'Orbitron', sans-serif; /* 메인 제목 폰트 적용 */
+        .hero-title {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            text-shadow: 0 0 20px rgba(0, 243, 255, 0.5);
+            animation: glow 3s infinite alternate;
         }
 
-        #hero p {
-            font-size: 1.8em;
-            color: #FFD700;
-            margin-top: 0;
-            font-weight: 400;
-            font-family: 'Rajdhani', sans-serif;
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: #ccc;
+            margin-bottom: 3rem;
         }
 
-        /* Section Headings */
-        .section-title {
-            text-align: center;
-            font-size: 2.5em;
-            margin-bottom: 80px;
-            color: #FFFFFF;
-            letter-spacing: 5px;
-            font-weight: 400;
-            font-family: 'Orbitron', sans-serif; /* 섹션 제목 폰트 적용 */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 30px;
+            animation: bounce 2s infinite;
         }
 
-        .section-title span {
-            border-bottom: 2px solid #FFD700;
-            padding-bottom: 5px;
+        /* --- Characters Section --- */
+        #characters {
+            padding: 100px 0;
         }
 
-        /* Works Gallery */
-        .works-gallery {
+        .gallery-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 50px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
         }
 
-        .work-card {
-            background: rgba(10, 10, 10, 0.7);
-            border: 1px solid rgba(255, 215, 0, 0.1);
-            padding: 25px;
-            text-align: center;
-            transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.5s ease;
-            cursor: pointer;
-            position: relative;
+        .card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            opacity: 0;
+            transform: translateY(50px);
+            /* 3D Tilt 효과를 위한 설정 */
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        .card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 0 30px rgba(188, 19, 254, 0.3);
+            border-color: var(--secondary-color);
+        }
+
+        .card-img-placeholder {
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(45deg, #222, #333);
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #666;
+            font-size: 1.2rem;
             overflow: hidden;
-        }
-
-        .work-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 40px rgba(255, 215, 0, 0.15); 
-            border: 1px solid #FFD700;
-        }
-
-        .work-card h3 {
-            color: #FFD700;
-            margin: 0 0 10px 0;
-            font-weight: 500;
-            font-size: 1.4em;
+            position: relative;
         }
         
-        .work-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
+        .card-img-placeholder img {
             width: 100%;
             height: 100%;
-            background: rgba(255, 215, 0, 0.05);
-            opacity: 0;
-            transition: opacity 0.5s;
-        }
-        .work-card:hover::before {
-            opacity: 1;
+            object-fit: cover;
+            transition: transform 0.5s;
         }
 
-        /* 나머지 섹션 스타일은 V3와 동일하게 유지 */
-        #ai-videos .video-container {
+        .card:hover .card-img-placeholder img {
+            transform: scale(1.1);
+        }
+
+        .card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+
+        .card p {
+            font-size: 0.95rem;
+            color: #aaa;
+        }
+
+        /* --- Video Section --- */
+        #video-works {
+            padding: 100px 0;
+        }
+
+        .video-container {
             width: 100%;
-            max-width: 900px;
+            max-width: 800px;
             margin: 0 auto;
-            border: 3px solid #333;
-            box-shadow: 0 0 30px rgba(255, 215, 0, 0.1);
+            background: #000;
+            border: 2px solid var(--glass-border);
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 0 50px rgba(0, 243, 255, 0.1);
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease;
         }
-        .video-container iframe { display: block; }
-        #contact { text-align: center; }
-        #contact p { font-size: 1.4em; font-weight: 300; }
+
+        .video-placeholder {
+            width: 100%;
+            height: 450px; /* 16:9 비율 유지 권장 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(circle, #2a2a2a, #000);
+            color: var(--primary-color);
+            font-size: 1.5rem;
+        }
+
+        /* --- Footer --- */
         footer {
+            padding: 50px 0;
             text-align: center;
-            padding: 30px 0;
-            border-top: 1px solid #111;
-            color: #444;
-            font-size: 0.8em;
-            font-family: 'Rajdhani', sans-serif;
+            border-top: 1px solid var(--glass-border);
+            color: #666;
         }
-        
-        /* 미디어 쿼리는 V3와 동일하게 유지 */
+
+        /* --- Animations & Utilities --- */
+        @keyframes glow {
+            from { text-shadow: 0 0 10px rgba(0, 243, 255, 0.2); }
+            to { text-shadow: 0 0 30px rgba(0, 243, 255, 0.8), 0 0 10px rgba(255, 255, 255, 0.5); }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        .visible {
+            opacity: 1 !important;
+            transform: translateY(0) !important;
+        }
+
+        /* 모바일 대응 */
         @media (max-width: 768px) {
-            header { padding: 15px 20px; }
-            header .logo { font-size: 1.4em; }
-            nav { display: none; }
-            #hero h1 { font-size: 3em; letter-spacing: 5px; }
-            #hero p { font-size: 1.2em; }
-            .section-title { font-size: 2em; }
-            .container { padding: 60px 0; }
+            .hero-title { font-size: 3rem; }
+            .section-title { font-size: 2rem; }
         }
     </style>
 </head>
 <body>
 
-    <canvas id="star-canvas"></canvas>
+    <div class="cursor"></div>
 
-    <header>
-        <div class="logo">Aethel: **Cosmic AI**</div>
-        <nav>
-            <a href="#hero">Home</a>
-            <a href="#ai-characters">Characters</a>
-            <a href="#ai-videos">Videos</a>
-            <a href="#contact">Contact</a>
-        </nav>
-    </header>
+    <canvas id="bg-canvas"></canvas>
 
     <section id="hero">
-        <h1>COSMIC **SYNTHESIS**</h1>
-        <p>인공지능의 광활한 창조 영역</p>
+        <div class="container">
+            <h1 class="hero-title">Neural Canvas</h1>
+            <p class="hero-subtitle">Exploring the Boundary Between Human Imagination & AI</p>
+        </div>
+        <div class="scroll-indicator">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                <path d="M7 13l5 5 5-5M7 6l5 5 5-5"/>
+            </svg>
+        </div>
     </section>
 
-    <section id="ai-characters" class="container">
-        <h2 class="section-title">AI **Characters**</h2>
-        <div class="works-gallery">
-            <div class="work-card">
-                <img src="https://via.placeholder.com/320x220/0A0A0A/FFD700?text=AI+Character+01" alt="AI 캐릭터 1">
-                <h3 class="highlight-text">The Architect</h3>
-                <p>구조와 미학을 탐구하는 AI 아키텍트</p>
-            </div>
-            <div class="work-card">
-                <img src="https://via.placeholder.com/320x220/0A0A0A/FFD700?text=AI+Character+02" alt="AI 캐릭터 2">
-                <h3 class="highlight-text">Subliminal Bloom</h3>
-                <p>무의식의 영역에서 피어난 초현실적 존재</p>
-            </div>
-            <div class="work-card">
-                <img src="https://via.placeholder.com/320x220/0A0A0A/FFD700?text=AI+Character+03" alt="AI 캐릭터 3">
-                <h3 class="highlight-text">Data Sentinel</h3>
-                <p>정보의 흐름을 지키는 기계 수호자</p>
+    <section id="characters">
+        <div class="container">
+            <h2 class="section-title fade-in">AI Character Design</h2>
+            <div class="gallery-grid">
+                <div class="card fade-in">
+                    <div class="card-img-placeholder">
+                        <span>AI Character 01</span>
+                    </div>
+                    <h3>Cyber Samurai</h3>
+                    <p>미래 도시의 네온사인을 반사하는 갑옷 질감을 AI로 정교하게 구현한 캐릭터 디자인입니다.</p>
+                </div>
+                <div class="card fade-in">
+                    <div class="card-img-placeholder">
+                        <span>AI Character 02</span>
+                    </div>
+                    <h3>Forest Spirit</h3>
+                    <p>자연의 유기적인 곡선과 신비로운 빛을 생성형 AI를 통해 표현한 판타지 캐릭터입니다.</p>
+                </div>
+                <div class="card fade-in">
+                    <div class="card-img-placeholder">
+                        <span>AI Character 03</span>
+                    </div>
+                    <h3>Mecha Girl</h3>
+                    <p>기계적인 디테일과 인간적인 감정을 동시에 담아낸 하이퍼 리얼리즘 스타일의 인물화입니다.</p>
+                </div>
             </div>
         </div>
     </section>
 
-    <section id="ai-videos" class="container">
-        <h2 class="section-title">AI **Video** Campaign</h2>
-        <div class="video-container">
-            <iframe 
-                width="100%" 
-                height="500" 
-                src="https://www.youtube.com/embed/YOUR_YOUTUBE_VIDEO_ID" 
-                title="AI 광고 영상 시연" 
-                frameborder="0" 
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                allowfullscreen>
-            </iframe>
-        </div>
-        <p style="text-align: center; margin-top: 30px; color: #555;">(상기 영상은 임베드 예시입니다. ID를 교체해 주세요.)</p>
-    </section>
-
-    <section id="contact" class="container">
-        <h2 class="section-title">Contact</h2>
-        <p>새로운 시대를 열어갈 협업을 기대합니다.</p>
-        <p class="highlight-text" style="font-size: 1.8em; margin-bottom: 20px;">contact@aethelart.com</p>
-        <div>
-            <a href="#" style="color: #666; margin: 0 15px; font-size: 1.5em; text-decoration: none;">[Instagram]</a>
-            <a href="#" style="color: #666; margin: 0 15px; font-size: 1.5em; text-decoration: none;">[LinkedIn]</a>
+    <section id="video-works">
+        <div class="container">
+            <h2 class="section-title fade-in">AI Commercial Video</h2>
+            <div class="video-container fade-in">
+                <div class="video-placeholder">
+                    <span>▶ Play AI Commercial Video</span>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 2rem; color: #888;" class="fade-in">
+                <p>텍스트-비디오 변환 기술을 활용하여 기획부터 편집까지 AI와 협업한 브랜드 광고 영상입니다.</p>
+            </div>
         </div>
     </section>
 
     <footer>
-        <p>&copy; 2025 Aethel AI Synesthesia. All rights reserved. | Cosmic AI Design</p>
+        <div class="container">
+            <p>© 2024 Neural Canvas Portfolio. Designed by Gemini.</p>
+            <p style="margin-top: 10px; font-size: 0.8rem; color: #444;">Contact: myemail@example.com</p>
+        </div>
     </footer>
 
     <script>
-        const canvas = document.getElementById('star-canvas');
-        const ctx = canvas.getContext('2d');
-        let width, height;
-        let stars = [];
-        let shootingStars = [];
-        const numStars = 250; // 별 개수 증가
-        const shootingStarFrequency = 0.005; 
-        let mouse = { x: 0, y: 0, active: false };
+        // 1. 커스텀 커서 효과
+        const cursor = document.querySelector('.cursor');
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
 
-        // 캔버스 크기 조정
-        function resizeCanvas() {
-            width = canvas.width = window.innerWidth;
-            height = canvas.height = document.body.scrollHeight;
-            initStars();
+        // 링크나 카드에 마우스 올렸을 때 커서 커짐
+        const hoverElements = document.querySelectorAll('.card, h1, .video-container');
+        hoverElements.forEach(el => {
+            el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+            el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+        });
+
+        // 2. 스크롤 애니메이션 (Intersection Observer)
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        const fadeElements = document.querySelectorAll('.fade-in, .section-title');
+        fadeElements.forEach(el => observer.observe(el));
+
+        // 3. AI 느낌의 배경 파티클 애니메이션 (Canvas)
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let particlesArray;
+
+        // 캔버스 크기 설정
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // 마우스 상호작용
+        let mouse = {
+            x: null,
+            y: null,
+            radius: (canvas.height/80) * (canvas.width/80)
         }
 
-        // 별 객체 정의
-        class Star {
-            constructor() {
-                this.x = Math.random() * width;
-                this.y = Math.random() * height;
-                this.size = Math.random() * 1.5 + 0.5; 
-                this.opacity = Math.random() * 0.5 + 0.3; 
-                // 별 움직임 속도 증가 (더 명확한 움직임)
-                this.speedX = Math.random() * 0.1 - 0.05; 
-                this.speedY = Math.random() * 0.1 - 0.05;
-            }
+        window.addEventListener('mousemove', (event) => {
+            mouse.x = event.x;
+            mouse.y = event.y;
+        });
 
-            update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
-                
-                // 경계를 벗어나면 반대편으로 이동
-                if (this.x < 0) this.x = width;
-                if (this.x > width) this.x = 0;
-                if (this.y < 0) this.y = height;
-                if (this.y > height) this.y = 0;
-                
-                // 별 반짝임 효과
-                this.opacity = Math.sin(Date.now() * 0.001 * (Math.random() * 0.5 + 0.5) + this.x / width * 5) * 0.3 + 0.5;
+        // 파티클 클래스
+        class Particle {
+            constructor(x, y, directionX, directionY, size, color) {
+                this.x = x;
+                this.y = y;
+                this.directionX = directionX;
+                this.directionY = directionY;
+                this.size = size;
+                this.color = color;
             }
-
+            // 그리기
             draw() {
-                ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
                 ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+                ctx.fillStyle = '#00f3ff'; /* 파티클 색상 */
                 ctx.fill();
             }
+            // 업데이트 (움직임 + 마우스 반응)
+            update() {
+                if (this.x > canvas.width || this.x < 0) {
+                    this.directionX = -this.directionX;
+                }
+                if (this.y > canvas.height || this.y < 0) {
+                    this.directionY = -this.directionY;
+                }
+
+                // 마우스 충돌 감지 (밀어내기 효과)
+                let dx = mouse.x - this.x;
+                let dy = mouse.y - this.y;
+                let distance = Math.sqrt(dx*dx + dy*dy);
+                if (distance < mouse.radius + this.size) {
+                    if (mouse.x < this.x && this.x < canvas.width - 10) {
+                        this.x += 10;
+                    }
+                    if (mouse.x > this.x && this.x > 10) {
+                        this.x -= 10;
+                    }
+                    if (mouse.y < this.y && this.y < canvas.height - 10) {
+                        this.y += 10;
+                    }
+                    if (mouse.y > this.y && this.y > 10) {
+                        this.y -= 10;
+                    }
+                }
+
+                this.x += this.directionX;
+                this.y += this.directionY;
+                this.draw();
+            }
         }
 
-        // 별똥별 (유성우) 객체 정의 (V3 유지)
-        class ShootingStar {
-            constructor() {
-                this.reset();
+        // 파티클 초기화
+        function init() {
+            particlesArray = [];
+            let numberOfParticles = (canvas.height * canvas.width) / 9000;
+            for (let i = 0; i < numberOfParticles; i++) {
+                let size = (Math.random() * 2) + 1;
+                let x = (Math.random() * ((innerWidth - size * 2) - (size * 2)) + size * 2);
+                let y = (Math.random() * ((innerHeight - size * 2) - (size * 2)) + size * 2);
+                let directionX = (Math.random() * 2) - 1; // 속도 조절
+                let directionY = (Math.random() * 2) - 1;
+                let color = '#00f3ff';
+
+                particlesArray.push(new Particle(x, y, directionX, directionY, size, color));
             }
+        }
 
-            reset() {
-                this.x = width + Math.random() * 200;
-                this.y = -50 - Math.random() * 200;
-                this.speedX = -(Math.random() * 5 + 3); 
-                this.speedY = (Math.random() * 5 + 3); 
-                this.length = Math.random() * 80 + 30;
-                this.opacity = 1;
-            }
-
-            update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
-                this.opacity -= 0.005; 
-
-                if (this.x < -this.length || this.y > height || this.opacity <= 0) {
-                    this.reset();
+        // 선 연결 (Neural Network 효과)
+        function connect() {
+            let opacityValue = 1;
+            for (let a = 0; a < particlesArray.length; a++) {
+                for (let b = a; b < particlesArray.length; b++) {
+                    let distance = ((particlesArray[a].x - particlesArray[b].x) * (particlesArray[a].x - particlesArray[b].x)) + 
+                                   ((particlesArray[a].y - particlesArray[b].y) * (particlesArray[a].y - particlesArray[b].y));
+                    if (distance < (canvas.width/7) * (canvas.height/7)) {
+                        opacityValue = 1 - (distance/20000);
+                        ctx.strokeStyle = 'rgba(0, 243, 255,' + opacityValue + ')';
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+                        ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
+                        ctx.stroke();
+                    }
                 }
             }
-
-            draw() {
-                const gradient = ctx.createLinearGradient(this.x, this.y, this.x + this.length * this.speedX * 0.05, this.y + this.length * this.speedY * 0.05);
-                gradient.addColorStop(0, `rgba(255, 215, 0, ${this.opacity})`); 
-                gradient.addColorStop(1, `rgba(255, 215, 0, 0)`);
-                
-                ctx.strokeStyle = gradient;
-                ctx.lineWidth = 1;
-                ctx.beginPath();
-                ctx.moveTo(this.x, this.y);
-                ctx.lineTo(this.x - this.length * this.speedX * 0.05, this.y - this.length * this.speedY * 0.05);
-                ctx.stroke();
-            }
         }
-
-        // 별 초기화
-        function initStars() {
-            stars = [];
-            for (let i = 0; i < numStars; i++) {
-                stars.push(new Star());
-            }
-        }
-        
-        // 유성우 초기화 (최초 1-2개만 시작)
-        for (let i = 0; i < 2; i++) {
-            shootingStars.push(new ShootingStar());
-        }
-
 
         // 애니메이션 루프
         function animate() {
-            // 이전 프레임을 미세하게만 지워서 별들의 잔상을 만듭니다.
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.2)'; 
-            ctx.fillRect(0, 0, width, height);
-
-            // 1. 별 업데이트 및 그리기
-            for (let i = 0; i < stars.length; i++) {
-                stars[i].update();
-                stars[i].draw();
-            }
-
-            // 2. 유성우 업데이트 및 그리기
-            for (let i = 0; i < shootingStars.length; i++) {
-                shootingStars[i].update();
-                shootingStars[i].draw();
-            }
-            
-            // 3. 새로운 유성우 생성 (랜덤 확률)
-            if (Math.random() < shootingStarFrequency) {
-                 shootingStars.push(new ShootingStar());
-                 if (shootingStars.length > 5) shootingStars.shift();
-            }
-
-            // 4. 마우스 인터랙션 (별 강조)
-            highlightStarsOnMouseOver();
-
             requestAnimationFrame(animate);
+            ctx.clearRect(0,0,innerWidth, innerHeight);
+
+            for (let i = 0; i < particlesArray.length; i++) {
+                particlesArray[i].update();
+            }
+            connect();
         }
 
-        // 마우스 주변 별 강조 효과
-        function highlightStarsOnMouseOver() {
-             if (!mouse.active) return;
-             const influenceRadius = 150;
-
-             for (let star of stars) {
-                 let distance = Math.sqrt((star.x - mouse.x) ** 2 + (star.y - mouse.y) ** 2);
-                 
-                 if (distance < influenceRadius) {
-                     let sizeBoost = 1 - (distance / influenceRadius);
-                     
-                     // 마우스에 가까울수록 별을 더 밝고 크게 만듭니다.
-                     let boostedSize = star.size + sizeBoost * 1.5; 
-                     ctx.fillStyle = `rgba(255, 255, 255, ${star.opacity + sizeBoost * 0.5})`; 
-                     
-                     ctx.beginPath();
-                     ctx.arc(star.x, star.y, boostedSize, 0, Math.PI * 2);
-                     ctx.fill();
-                 }
-             }
-        }
-
-
-        // 이벤트 리스너
-        window.addEventListener('resize', resizeCanvas);
-        
-        // 마우스 움직임 감지
-        window.addEventListener('mousemove', function(event) {
-            mouse.x = event.clientX;
-            mouse.y = event.clientY + window.scrollY;
-            mouse.active = true;
+        // 리사이즈 대응
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            mouse.radius = (canvas.height/80) * (canvas.width/80);
+            init();
         });
 
-        // 마우스가 캔버스를 벗어나면 비활성화
-        window.addEventListener('mouseout', function() {
-            mouse.active = false;
+        // 마우스 아웃 시 위치 초기화
+        window.addEventListener('mouseout', () => {
+            mouse.x = undefined;
+            mouse.y = undefined;
         });
 
-        // 초기 실행
-        resizeCanvas();
-        animate(); 
+        init();
+        animate();
     </script>
 </body>
 </html>

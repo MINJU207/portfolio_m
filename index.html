@@ -2,426 +2,86 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neural Canvas | AI Creator Portfolio</title>
-    <style>
-        /* --- CSS Reset & Variables --- */
-        :root {
-            --bg-color: transparent;
-            --text-color: #ffffff;
-            --primary-color: #00f3ff;
-            --secondary-color: #bc13fe;
-            --glass-bg: rgba(20, 20, 20, 0.6);
-            --glass-border: rgba(255, 255, 255, 0.1);
-        }
-
-        /* ★ 스냅 설정 (html) ★ */
-        html {
-            scroll-behavior: smooth;
-            scroll-snap-type: y mandatory; /* Y축 강제 스냅 */
-            height: 100vh;
-            overflow-y: scroll;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            cursor: none;
-        }
-
-        body {
-            font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
-            background-color: #050505;
-            color: var(--text-color);
-            line-height: 1.6;
-        }
-
-        a { text-decoration: none; color: inherit; cursor: none; }
-        ul { list-style: none; }
-
-        /* --- Background Canvas --- */
-        #bg-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            background: radial-gradient(circle at center, #1a1a2e 0%, #000000 100%);
-        }
-
-        /* --- Navigation --- */
-        header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            padding: 20px 50px;
-            z-index: 1000;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(0,0,0,0.01);
-            backdrop-filter: blur(5px);
-        }
-        .logo { font-size: 1.5rem; font-weight: 800; color: #fff; letter-spacing: 2px; }
-        .logo span { color: var(--primary-color); }
-        .nav-links { display: flex; gap: 40px; }
-        .nav-links a { font-size: 1rem; font-weight: 500; text-transform: uppercase; transition: color 0.3s; }
-        .nav-links a:hover { color: var(--primary-color); }
-
-        /* --- Section Common Styles (풀페이지 설정) --- */
-        section {
-            height: 100vh; /* 화면 꽉 채우기 */
-            width: 100%;
-            
-            /* ★ 강력 스냅 설정 (여기가 중요!) ★ */
-            scroll-snap-align: start; 
-            scroll-snap-stop: always; /* 스크롤을 무조건 해당 섹션에서 멈추게 함 */
-            
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            /* 여백을 줄여서 한 화면에 다 들어오도록 유도 */
-            padding: 0 2rem; 
-        }
-
-        .container {
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 1;
-        }
-
-        .section-title {
-            font-size: 3rem;
-            text-align: center;
-            margin-bottom: 2rem; /* 여백 줄임 */
-            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-transform: uppercase;
-            letter-spacing: -2px;
-            opacity: 0; transform: translateY(30px); transition: all 0.8s ease;
-        }
-
-        /* --- Hero Section --- */
-        .hero-title {
-            font-size: 5rem;
-            margin-bottom: 1rem;
-            text-transform: uppercase;
-            text-shadow: 0 0 20px rgba(0, 243, 255, 0.5);
-            animation: glow 3s infinite alternate;
-            text-align: center;
-        }
-        .hero-subtitle { font-size: 1.5rem; color: #ccc; text-align: center; }
-
-        /* --- About Section (여백 최적화) --- */
-        /* 패딩을 강제로 줄여서 한 화면에 들어오게 만듦 */
-        #about .container {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            height: 100%;
-        }
-
-        .about-content {
-            display: flex;
-            align-items: center;
-            gap: 3rem;
-            background: rgba(0, 0, 0, 0.5);
-            padding: 3rem; /* 내부 여백 줄임 */
-            border-radius: 30px;
-            border: 1px solid var(--glass-border);
-            backdrop-filter: blur(10px);
-            opacity: 0; transform: translateY(30px); transition: all 0.8s ease;
-            max-width: 1000px; /* 너무 퍼지지 않게 */
-            margin: 0 auto;
-        }
-
-        .profile-img {
-            width: 220px; height: 220px; /* 이미지 크기 살짝 줄임 */
-            flex-shrink: 0;
-            background: linear-gradient(45deg, #222, #444);
-            border-radius: 20px;
-            display: flex; justify-content: center; align-items: center;
-            color: #666; box-shadow: 0 0 30px rgba(0, 243, 255, 0.2);
-            overflow: hidden;
-        }
-        .profile-img img { width: 100%; height: 100%; object-fit: cover; }
-
-        .profile-info h3 { font-size: 2rem; margin-bottom: 0.5rem; }
-        .job-title { color: var(--primary-color); border: 1px solid var(--primary-color); padding: 5px 15px; border-radius: 20px; font-size: 0.9rem; display: inline-block; margin-bottom: 1rem;}
-        .bio-text { color: #ddd; margin-bottom: 1.5rem; line-height: 1.5; font-size: 1rem; }
-        .skills { display: flex; gap: 8px; flex-wrap: wrap; }
-        .skill-tag { background: rgba(255, 255, 255, 0.1); padding: 5px 10px; border-radius: 5px; font-size: 0.8rem; }
-
-        /* --- Portfolio (Grid) --- */
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1.5rem;
-            width: 100%;
-        }
-        .card {
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: 15px;
-            padding: 1.2rem;
-            backdrop-filter: blur(10px);
-            opacity: 0; transform: translateY(50px); transition: all 0.4s ease;
-        }
-        .card:hover { transform: translateY(-10px) scale(1.02); border-color: var(--secondary-color); box-shadow: 0 0 20px rgba(188, 19, 254, 0.3); }
-        .card-img { height: 180px; background: #222; border-radius: 10px; margin-bottom: 1rem; display: flex; align-items: center; justify-content: center; color: #555; overflow: hidden;}
-        .card-img img { width: 100%; height: 100%; object-fit: cover; }
-        .card h3 { font-size: 1.1rem; margin-bottom: 0.3rem; color: #fff; }
-        .card p { font-size: 0.85rem; color: #aaa; }
-
-        /* --- Portfolio (Video) --- */
-        .video-wrapper {
-            width: 80%; max-width: 800px; margin: 0 auto;
-            background: #000; border: 2px solid var(--glass-border); border-radius: 20px; overflow: hidden;
-            box-shadow: 0 0 50px rgba(0, 243, 255, 0.1);
-            opacity: 0; transform: translateY(50px); transition: all 0.8s ease;
-        }
-        .video-placeholder { height: 400px; display: flex; align-items: center; justify-content: center; color: var(--primary-color); background: #111; position: relative;}
-        /* 실제 비디오 태그 사용시 스타일 */
-        .video-placeholder video { width: 100%; height: 100%; object-fit: cover; }
-
-        /* --- Contact --- */
-        .contact-box {
-            background: rgba(0,0,0,0.7); padding: 3rem; border-radius: 30px; border: 1px solid var(--glass-border);
-            text-align: center; opacity: 0; transform: translateY(30px); transition: all 0.8s ease;
-        }
-        .contact-btn {
-            display: inline-block; margin-top: 2rem; padding: 12px 30px; background: var(--primary-color); color: #000; border-radius: 30px; font-weight: bold; transition: 0.3s;
-        }
-        .contact-btn:hover { background: #fff; transform: scale(1.05); }
-        .footer-text { margin-top: 50px; color: #555; font-size: 0.8rem; }
-
-        /* --- Cursor --- */
-        .cursor {
-            position: fixed; width: 20px; height: 20px; border: 2px solid var(--primary-color); border-radius: 50%;
-            pointer-events: none; z-index: 9999; transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s, background 0.3s; mix-blend-mode: difference;
-        }
-        .cursor.hovered { width: 50px; height: 50px; background: rgba(0, 243, 255, 0.2); }
-
-        /* --- Animations --- */
-        @keyframes glow { from { text-shadow: 0 0 10px rgba(0, 243, 255, 0.2); } to { text-shadow: 0 0 30px rgba(0, 243, 255, 0.8); } }
-        .visible { opacity: 1 !important; transform: translateY(0) !important; }
-
-        /* Mobile Responsive */
-        @media (max-width: 768px) {
-            .hero-title { font-size: 3rem; }
-            .about-content { flex-direction: column; text-align: center; gap: 2rem; padding: 20px; width: 100%; }
-            .profile-img { width: 150px; height: 150px; margin: 0 auto; }
-            .gallery-grid { grid-template-columns: 1fr; } 
-            
-            /* 모바일에서는 스냅 풀기 (내용이 길어서 오히려 불편함) */
-            section { height: auto; min-height: 100vh; padding: 100px 20px; scroll-snap-stop: normal; }
-            html { scroll-snap-type: none; }
-        }
-    </style>
+    <title>Neural Canvas | Home</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
     <div class="cursor"></div>
     <canvas id="bg-canvas"></canvas>
 
     <header>
-        <div class="logo">NEURAL<span>.ART</span></div>
+        <div class="logo"><a href="index.html">NEURAL<span>.ART</span></a></div>
         <nav>
             <ul class="nav-links">
-                <li><a href="#about" class="hover-trigger">소개</a></li>
-                <li><a href="#portfolio-1" class="hover-trigger">캐릭터</a></li>
-                <li><a href="#portfolio-2" class="hover-trigger">영상</a></li>
-                <li><a href="#contact" class="hover-trigger">연락처</a></li>
-            </ul>
+                <li><a href="about.html">소개</a></li>
+                <li><a href="portfolio.html">포트폴리오</a></li>
+                <li><a href="contact.html">연락처</a></li> </ul>
         </nav>
     </header>
 
     <section id="hero">
         <div class="container">
-            <h1 class="hero-title hover-trigger">Neural Canvas</h1>
-            <p class="hero-subtitle">상상을 현실로 만드는 AI 크리에이티브</p>
+            <h1 class="hero-title">Neural Canvas</h1>
+            <p class="hero-desc">
+                상상을 현실로 만드는 AI 크리에이티브 스튜디오<br>
+                당신의 비전을 디지털 아트로 완성합니다.
+            </p>
+            <div class="bounce-arrow">
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M7 13l5 5 5-5M7 6l5 5 5-5"/>
+                </svg>
+            </div>
         </div>
     </section>
 
-    <section id="about">
+    <section id="about-preview">
         <div class="container">
             <h2 class="section-title">Who I Am</h2>
-            <div class="about-content fade-in">
-                <div class="profile-img">
-                    <span>IMG</span>
-                    </div>
-                <div class="profile-info">
-                    <h3>홍길동 <span>AI Artist</span></h3>
-                    <span class="job-title">Web Planner & Creator</span>
-                    <p class="bio-text">
-                        기술과 예술의 경계에서 새로운 가치를 만듭니다.<br>
-                        AI 툴과 웹 기술을 결합하여 감각적인 경험을 설계합니다.
+            <div class="glass-box about-preview">
+                <div class="preview-img">
+                    <span>IMG</span> 
+                </div>
+                <div class="preview-text">
+                    <h3>홍길동</h3>
+                    <span class="role">AI Artist & Director</span>
+                    <p>
+                        "기술과 예술의 경계를 탐구합니다."<br><br>
+                        생성형 AI를 활용한 독창적인 캐릭터 디자인과
+                        몰입감 있는 영상 콘텐츠를 제작하는 크리에이터입니다.
                     </p>
-                    <div class="skills">
-                        <span class="skill-tag">Web Design</span>
-                        <span class="skill-tag">Prompt Engineering</span>
-                        <span class="skill-tag">Video Editing</span>
-                        <span class="skill-tag">UX/UI</span>
+                    <div style="margin-top: 20px;">
+                        <a href="about.html" class="btn">더 자세한 소개 보기</a>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="portfolio-1">
+    <section id="contact-preview">
         <div class="container">
-            <h2 class="section-title">AI Characters</h2>
-            <div class="gallery-grid">
-                <div class="card fade-in hover-trigger">
-                    <div class="card-img"><span>Character 01</span></div>
-                    <h3>Cyber Samurai</h3>
-                    <p>미래 도시의 네온 감성</p>
+            <h2 class="section-title">Get In Touch</h2>
+            <div class="glass-box contact-card">
+                <div class="contact-item" style="margin-top: 2rem;">
+                    <strong>Phone</strong> 010-1234-5678
                 </div>
-                <div class="card fade-in hover-trigger">
-                    <div class="card-img"><span>Character 02</span></div>
-                    <h3>Forest Spirit</h3>
-                    <p>신비로운 숲의 정령</p>
+                <div class="contact-item">
+                    <strong>Email</strong> myemail@example.com
                 </div>
-                <div class="card fade-in hover-trigger">
-                    <div class="card-img"><span>Character 03</span></div>
-                    <h3>Mecha Girl</h3>
-                    <p>하이퍼 리얼리즘 메카닉</p>
+                <div class="contact-item">
+                    <strong>Social</strong> @my_insta_id
+                </div>
+                
+                <div style="margin-top: 3rem; display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                    <a href="contact.html" class="btn filled">연락처 자세히 보기</a>
+                    <a href="portfolio.html" class="btn">포트폴리오</a>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <section id="portfolio-2">
-        <div class="container">
-            <h2 class="section-title">AI Commercial</h2>
-            <div class="video-wrapper fade-in hover-trigger">
-                <div class="video-placeholder">
-                    <span>▶ Play Brand Video</span>
-                    </div>
-            </div>
-            <p style="text-align: center; color: #888; margin-top: 20px;">
-                기획부터 편집까지 AI와 협업한 브랜드 필름
+            <p style="margin-top: 50px; font-size: 0.8rem; color: var(--sub-text-color);">
+                © 2024 Neural Canvas. Designed by Gemini.
             </p>
         </div>
     </section>
 
-    <section id="contact">
-        <div class="container">
-            <h2 class="section-title">Get In Touch</h2>
-            <div class="contact-box fade-in hover-trigger">
-                <p style="font-size: 1.5rem; margin-bottom: 1rem; color:#fff;">Let's create something amazing.</p>
-                <p style="color: var(--primary-color);">010-1234-5678</p>
-                <p style="color: #aaa;">myemail@example.com</p>
-                <a href="#" class="contact-btn">문의 메일 보내기</a>
-            </div>
-            <div class="footer-text">
-                © 2024 Neural Canvas. Designed by Gemini.
-            </div>
-        </div>
-    </section>
-
-    <script>
-        // 1. 커스텀 커서
-        const cursor = document.querySelector('.cursor');
-        document.addEventListener('mousemove', (e) => {
-            cursor.style.left = e.clientX + 'px';
-            cursor.style.top = e.clientY + 'px';
-        });
-        document.querySelectorAll('.hover-trigger, a').forEach(el => {
-            el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
-            el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
-        });
-
-        // 2. 스크롤 애니메이션 (Intersection Observer)
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, { threshold: 0.2 }); // 20%만 보여도 애니메이션 시작
-
-        document.querySelectorAll('.fade-in, .section-title, .about-content, .contact-box, .video-wrapper, .card').forEach(el => observer.observe(el));
-
-        // 3. 배경 파티클
-        const canvas = document.getElementById('bg-canvas');
-        const ctx = canvas.getContext('2d');
-        let particlesArray;
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        let mouse = { x: null, y: null, radius: (canvas.height/80) * (canvas.width/80) }
-        window.addEventListener('mousemove', (event) => { mouse.x = event.x; mouse.y = event.y; });
-        
-        class Particle {
-            constructor(x, y, dx, dy, size, color) {
-                this.x = x; this.y = y; this.dx = dx; this.dy = dy; this.size = size; this.color = color;
-            }
-            draw() {
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
-                ctx.fillStyle = this.color; ctx.fill();
-            }
-            update() {
-                if (this.x > canvas.width || this.x < 0) this.dx = -this.dx;
-                if (this.y > canvas.height || this.y < 0) this.dy = -this.dy;
-                let dx = mouse.x - this.x; let dy = mouse.y - this.y;
-                let distance = Math.sqrt(dx*dx + dy*dy);
-                if (distance < mouse.radius + this.size) {
-                    if (mouse.x < this.x && this.x < canvas.width - 10) this.x += 10;
-                    if (mouse.x > this.x && this.x > 10) this.x -= 10;
-                    if (mouse.y < this.y && this.y < canvas.height - 10) this.y += 10;
-                    if (mouse.y > this.y && this.y > 10) this.y -= 10;
-                }
-                this.x += this.dx; this.y += this.dy;
-                this.draw();
-            }
-        }
-        function init() {
-            particlesArray = [];
-            let numberOfParticles = (canvas.height * canvas.width) / 9000;
-            for (let i = 0; i < numberOfParticles; i++) {
-                let size = (Math.random() * 2) + 1;
-                let x = Math.random() * (innerWidth - size * 2) + size;
-                let y = Math.random() * (innerHeight - size * 2) + size;
-                let dx = (Math.random() * 2) - 1; let dy = (Math.random() * 2) - 1;
-                particlesArray.push(new Particle(x, y, dx, dy, size, '#00f3ff'));
-            }
-        }
-        function connect() {
-            let opacityValue = 1;
-            for (let a = 0; a < particlesArray.length; a++) {
-                for (let b = a; b < particlesArray.length; b++) {
-                    let distance = ((particlesArray[a].x - particlesArray[b].x) * (particlesArray[a].x - particlesArray[b].x)) + 
-                                   ((particlesArray[a].y - particlesArray[b].y) * (particlesArray[a].y - particlesArray[b].y));
-                    if (distance < (canvas.width/7) * (canvas.height/7)) {
-                        opacityValue = 1 - (distance/20000);
-                        ctx.strokeStyle = 'rgba(0, 243, 255,' + opacityValue + ')';
-                        ctx.lineWidth = 1; ctx.beginPath();
-                        ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
-                        ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
-                        ctx.stroke();
-                    }
-                }
-            }
-        }
-        function animate() {
-            requestAnimationFrame(animate);
-            ctx.clearRect(0,0,innerWidth, innerHeight);
-            for (let i = 0; i < particlesArray.length; i++) particlesArray[i].update();
-            connect();
-        }
-        window.addEventListener('resize', () => {
-            canvas.width = window.innerWidth; canvas.height = window.innerHeight; init();
-        });
-        init(); animate();
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>

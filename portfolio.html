@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Portfolio | Neural Canvas</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* 상세 페이지는 자유 스크롤 적용 */
+        html, body { height: auto; overflow-y: auto; scroll-snap-type: none; }
+        section { height: auto; min-height: 100vh; padding: 150px 20px 100px; overflow: visible; }
+    </style>
+</head>
+<body>
+    <div class="cursor"></div>
+    <canvas id="bg-canvas"></canvas>
+
+    <header>
+        <div class="logo"><a href="index.html">NEURAL<span>.ART</span></a></div>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="about.html">소개</a></li>
+                <li><a href="portfolio.html" class="active">포트폴리오</a></li>
+                <li><a href="contact.html">연락처</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section>
+        <div class="container">
+            <h2 class="section-title">Portfolio</h2>
+            
+            <div class="portfolio-group">
+                <h3 class="group-title">AI Character Design</h3>
+                <div class="gallery-grid">
+                    <div class="glass-box card">
+                        <div class="card-img"><span>Work 01</span></div>
+                        <h3>Cyber Samurai</h3>
+                        <p>미래 도시 컨셉 캐릭터</p>
+                    </div>
+                    <div class="glass-box card">
+                        <div class="card-img"><span>Work 02</span></div>
+                        <h3>Forest Spirit</h3>
+                        <p>판타지 자연 정령</p>
+                    </div>
+                    <div class="glass-box card">
+                        <div class="card-img"><span>Work 03</span></div>
+                        <h3>Mecha Girl</h3>
+                        <p>SF 메카닉 디자인</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="portfolio-group">
+                <h3 class="group-title">AI Commercial Video</h3>
+                <div class="video-wrapper">
+                    <div class="video-placeholder">
+                        <span>▶ Play Video</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script src="script.js"></script>
+</body>
+</html>

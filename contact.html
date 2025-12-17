@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Contact | Neural Canvas</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* 상세 페이지는 자유 스크롤 적용 */
+        html, body { height: auto; overflow-y: auto; scroll-snap-type: none; }
+        section { height: auto; min-height: 100vh; padding: 150px 20px 100px; overflow: visible; }
+    </style>
+</head>
+<body>
+    <div class="cursor"></div>
+    <canvas id="bg-canvas"></canvas>
+
+    <header>
+        <div class="logo"><a href="index.html">NEURAL<span>.ART</span></a></div>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="about.html">소개</a></li>
+                <li><a href="portfolio.html">포트폴리오</a></li>
+                <li><a href="contact.html" class="active">연락처</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section>
+        <div class="container">
+            <h2 class="section-title">Get In Touch</h2>
+            <div class="glass-box contact-card" style="max-width:800px; padding: 5rem;">
+                <p style="font-size:1.3rem; margin-bottom:3rem; color:var(--text-color);">
+                    새로운 프로젝트, 강의 의뢰, 혹은 단순한 커피챗도 환영합니다.<br>
+                    언제든 편하게 연락주세요.
+                </p>
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:2rem; text-align:left;">
+                    <div class="contact-item"><strong>Phone</strong> 010-1234-5678</div>
+                    <div class="contact-item"><strong>Email</strong> myemail@example.com</div>
+                    <div class="contact-item"><strong>Office</strong> 부산광역시 해운대구</div>
+                    <div class="contact-item"><strong>SNS</strong> @my_insta_id</div>
+                </div>
+                <div style="margin-top:4rem; text-align:center;">
+                    <a href="mailto:myemail@example.com" class="btn filled" style="padding: 15px 50px;">이메일 보내기</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>About | Neural Canvas</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* 상세 페이지는 자유 스크롤 적용 */
+        html, body { height: auto; overflow-y: auto; scroll-snap-type: none; }
+        section { height: auto; min-height: 100vh; padding: 150px 20px 100px; overflow: visible; }
+    </style>
+</head>
+<body>
+    <div class="cursor"></div>
+    <canvas id="bg-canvas"></canvas>
+
+    <header>
+        <div class="logo"><a href="index.html">NEURAL<span>.ART</span></a></div>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="about.html" class="active">소개</a></li>
+                <li><a href="portfolio.html">포트폴리오</a></li>
+                <li><a href="contact.html">연락처</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section>
+        <div class="container">
+            <h2 class="section-title">Who I Am</h2>
+            <div class="glass-box about-content-full" style="display:flex; gap:3rem;">
+                <div class="profile-img-full" style="flex:1;">
+                    <div style="width:100%; height:100%; background:#f0f0f0; display:flex; align-items:center; justify-content:center; border-radius:26px;">
+                        <span>Profile IMG</span>
+                    </div>
+                </div>
+                <div class="preview-text" style="flex:2;">
+                    <h3 style="font-size:2.5rem; margin-bottom:0.5rem;">홍길동 <span style="font-size:1.2rem; color:var(--primary-color);">Creator</span></h3>
+                    <span class="role">AI Artist & Web Planner</span>
+                    <p style="margin-top:1.5rem; line-height:1.8;">
+                        안녕하세요. 기술과 예술의 융합을 지향하는 크리에이터 홍길동입니다.<br>
+                        저는 탄탄한 기술적 배경을 바탕으로, 최신 생성형 AI 기술을 접목하여 
+                        독창적인 디지털 콘텐츠를 제작하고 있습니다.
+                    </p>
+                    <h4 style="margin-top:2rem; margin-bottom:1rem; font-size:1.2rem; font-weight:700;">Skills</h4>
+                    <div class="skills" style="display:flex; gap:10px; flex-wrap:wrap;">
+                        <span class="skill-tag">Web Planning</span>
+                        <span class="skill-tag">Prompt Engineering</span>
+                        <span class="skill-tag">Video Editing</span>
+                        <span class="skill-tag">AWS Cloud</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script src="script.js"></script>
+</body>
+</html>

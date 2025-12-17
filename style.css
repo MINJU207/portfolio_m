@@ -19,10 +19,11 @@
     --box-shadow: 0 10px 40px rgba(98, 0, 234, 0.12);
 }
 
-/* --- 쫀득한 스크롤 강제 적용 --- */
+/* --- 쫀득한 스크롤 강제 적용 (HTML 설정 수정됨) --- */
 html {
     margin: 0; padding: 0; width: 100%; height: 100%;
-    overflow: hidden; /* html 스크롤 막음 */
+    /* overflow: hidden;  <-- 이 부분이 서브페이지 스크롤을 막아서 주석 처리하거나 변경 */
+    overflow-x: hidden; /* 가로 스크롤만 막음 */
 }
 
 body {
@@ -165,7 +166,7 @@ section {
 .bounce-arrow { margin-top: 50px; animation: bounce 2s infinite; color: var(--primary-color); }
 @keyframes bounce { 0%, 20%, 50%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-10px); } 60% { transform: translateY(-5px); } }
 
-/* --- ★ 포트폴리오 페이지 전용 스타일 (새로 추가됨) ★ --- */
+/* --- ★ 포트폴리오 페이지 전용 스타일 ★ --- */
 
 /* 상단 여백 및 높이 조정 */
 .portfolio-header {
@@ -247,4 +248,24 @@ section {
     
     /* 포트폴리오 헤더 모바일 높이 조정 */
     .portfolio-header { min-height: 30vh; padding-top: 120px; }
+}
+
+/* --- [긴급 추가] 서브페이지 스크롤 튕김 방지 및 높이 해제 --- */
+/* portfolio.html에서 <body class="subpage"> 인 경우에만 작동합니다 */
+
+body.subpage {
+    scroll-snap-type: none !important; /* 스냅 기능 끄기 (튕김 원인 제거) */
+    height: auto !important; /* 높이 100% 강제 해제 */
+    overflow-y: visible !important; /* 자연스러운 스크롤 허용 */
+}
+
+body.subpage section {
+    height: auto !important; /* 섹션 100vh 강제 해제 */
+    min-height: auto !important;
+    scroll-snap-align: none !important;
+}
+
+/* 서브페이지에서는 html 태그의 스크롤도 풀어줍니다 */
+html:has(.subpage) {
+    overflow-y: auto !important;
 }

@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
             cursor.style.left = e.clientX + 'px';
             cursor.style.top = e.clientY + 'px';
         });
-        const hoverTargets = document.querySelectorAll('a, button, .glass-box, .video-wrapper');
+        const hoverTargets = document.querySelectorAll('a, button, .glass-box, .video-wrapper, .filter-btn'); // 버튼에도 반응하게 추가
         hoverTargets.forEach(el => {
             el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
             el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
@@ -107,5 +107,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
         window.addEventListener('resize', () => { setCanvasSize(); init(); });
         init(); animate();
+    }
+
+    // 4. 포트폴리오 필터링 기능 (새로 추가된 부분)
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const portfolioItems = document.querySelectorAll('.card');
+
+    if(filterButtons.length > 0) { // 버튼이 있는 페이지에서만 실행
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                
+                // 1. 모든 버튼 활성 상태 해제 후 클릭된 버튼 활성화
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+
+                // 2. 필터 값 가져오기
+                const filterValue = button.getAttribute('data-filter');
+
+                // 3. 필터링 로직 수행
+                portfolioItems.forEach(item => {
+                    if (filterValue === 'all' || item.getAttribute('data-category') === filterValue) {
+                        item.classList.remove('hide');
+                        // 부드러운 등장 애니메이션
+                        item.style.opacity = '0';
+                        setTimeout(() => item.style.opacity = '1', 50);
+                    } else {
+                        item.classList.add('hide');
+                    }
+                });
+            });
+        });
     }
 });

@@ -2,13 +2,8 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>Portfolio | Neural Canvas</title>
+    <title>Neural Canvas | Portfolio</title>
     <link rel="stylesheet" href="style.css">
-    <style>
-        /* 상세 페이지는 자유 스크롤 적용 */
-        html, body { height: auto; overflow-y: auto; scroll-snap-type: none; }
-        section { height: auto; min-height: 100vh; padding: 150px 20px 100px; overflow: visible; }
-    </style>
 </head>
 <body>
     <div class="cursor"></div>
@@ -20,46 +15,85 @@
             <ul class="nav-links">
                 <li><a href="about.html">소개</a></li>
                 <li><a href="portfolio.html" class="active">포트폴리오</a></li>
-                <li><a href="contact.html">연락처</a></li>
+                <li><a href="#">서비스</a></li> 
+                <li><a href="contact.html">연락처</a></li> 
             </ul>
         </nav>
     </header>
 
-    <section>
+    <section class="portfolio-header">
         <div class="container">
-            <h2 class="section-title">Portfolio</h2>
-            
-            <div class="portfolio-group">
-                <h3 class="group-title">AI Character Design</h3>
-                <div class="gallery-grid">
-                    <div class="glass-box card">
-                        <div class="card-img"><span>Work 01</span></div>
-                        <h3>Cyber Samurai</h3>
-                        <p>미래 도시 컨셉 캐릭터</p>
-                    </div>
-                    <div class="glass-box card">
-                        <div class="card-img"><span>Work 02</span></div>
-                        <h3>Forest Spirit</h3>
-                        <p>판타지 자연 정령</p>
-                    </div>
-                    <div class="glass-box card">
-                        <div class="card-img"><span>Work 03</span></div>
-                        <h3>Mecha Girl</h3>
-                        <p>SF 메카닉 디자인</p>
-                    </div>
-                </div>
-            </div>
+            <h1 class="section-title visible" style="opacity: 1; transform: translateY(0);">
+                Creative Works
+            </h1>
+            <p style="text-align: center; color: var(--sub-text-color);">
+                학년별 프로젝트 아카이브
+            </p>
 
-            <div class="portfolio-group">
-                <h3 class="group-title">AI Commercial Video</h3>
-                <div class="video-wrapper">
-                    <div class="video-placeholder">
-                        <span>▶ Play Video</span>
-                    </div>
-                </div>
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">전체보기</button>
+                <button class="filter-btn" data-filter="grade3">3학년</button>
+                <button class="filter-btn" data-filter="grade2">2학년</button>
+                <button class="filter-btn" data-filter="grade1">1학년</button>
             </div>
         </div>
     </section>
+
+    <div class="container portfolio-container">
+        <div class="gallery-grid">
+            
+            <div class="card glass-box" data-category="grade3">
+                <div class="card-img">
+                    <span>IMG (3학년)</span>
+                </div>
+                <h3>졸업 작품 프로젝트</h3>
+                <p>AI 생성형 영상 제작</p>
+                <span class="grade-tag">3학년</span>
+            </div>
+
+            <div class="card glass-box" data-category="grade3">
+                <div class="card-img">
+                    <span>IMG (3학년)</span>
+                </div>
+                <h3>UX/UI 디자인 리뉴얼</h3>
+                <p>사용자 경험 중심 설계</p>
+                <span class="grade-tag">3학년</span>
+            </div>
+
+            <div class="card glass-box" data-category="grade2">
+                <div class="card-img">
+                    <span>IMG (2학년)</span>
+                </div>
+                <h3>인터랙티브 웹 구현</h3>
+                <p>Javascript & Canvas</p>
+                <span class="grade-tag">2학년</span>
+            </div>
+
+             <div class="card glass-box" data-category="grade2">
+                <div class="card-img">
+                    <span>IMG (2학년)</span>
+                </div>
+                <h3>모션 그래픽스 기초</h3>
+                <p>After Effects 활용</p>
+                <span class="grade-tag">2학년</span>
+            </div>
+
+            <div class="card glass-box" data-category="grade1">
+                <div class="card-img">
+                    <span>IMG (1학년)</span>
+                </div>
+                <h3>디지털 드로잉 기초</h3>
+                <p>Photoshop & Illustrator</p>
+                <span class="grade-tag">1학년</span>
+            </div>
+
+        </div>
+    </div>
+
+    <footer style="text-align: center; padding: 50px 0; color: #888; font-size: 0.8rem;">
+        © 2024 Neural Canvas.
+    </footer>
+
     <script src="script.js"></script>
 </body>
 </html>

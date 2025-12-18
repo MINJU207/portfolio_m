@@ -139,3 +139,53 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+// --- 포트폴리오 팝업(모달) 기능 ---
+const modal = document.getElementById("portfolioModal");
+const modalImg = document.getElementById("modalImg");
+const modalPlaceholder = document.getElementById("modalImgPlaceholder");
+const modalTitle = document.getElementById("modalTitle");
+const modalDesc = document.getElementById("modalDesc");
+const modalTech = document.getElementById("modalTech");
+
+// 1. 카드 클릭 시 모달 열기 함수
+function openModal(element) {
+    // 클릭한 카드의 data- 속성값 가져오기
+    const title = element.getAttribute('data-title');
+    const desc = element.getAttribute('data-desc');
+    const imgInfo = element.getAttribute('data-img');
+    const tech = element.getAttribute('data-tech');
+
+    // 모달 내용 채우기
+    modalTitle.innerHTML = title ? title : element.querySelector('h3').innerText; // data 없으면 카드 제목 사용
+    modalDesc.innerHTML = desc ? desc : "상세 설명이 준비 중입니다.";
+    modalTech.innerHTML = tech ? tech : "";
+
+    // 이미지 처리 (이미지 파일이 있으면 보여주고, 없으면 회색 박스)
+    if (imgInfo && imgInfo !== "null") {
+        modalImg.src = imgInfo;
+        modalImg.style.display = "block";
+        modalPlaceholder.style.display = "none";
+    } else {
+        modalImg.style.display = "none";
+        modalPlaceholder.style.display = "flex";
+    }
+
+    // 모달 보여주기
+    modal.style.display = "flex";
+    document.body.style.overflow = "hidden"; // 배경 스크롤 막기
+}
+
+// 2. 닫기 버튼 기능
+function closeModal() {
+    modal.style.display = "none";
+    document.body.style.overflow = "auto"; // 배경 스크롤 풀기
+}
+
+// 3. 배경 클릭 시 닫기
+window.onclick = function(event) {
+    if (event.target == modal) {
+        closeModal();
+    }
+}
+

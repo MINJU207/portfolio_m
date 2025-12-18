@@ -15,6 +15,7 @@
             <ul class="nav-links">
                 <li><a href="about.html">소개</a></li>
                 <li><a href="portfolio.html" class="active">포트폴리오</a></li>
+                <li><a href="#">서비스</a></li> 
                 <li><a href="contact.html">연락처</a></li> 
             </ul>
         </nav>
@@ -22,77 +23,154 @@
 
     <section class="portfolio-header">
         <div class="container">
-            <h1 class="section-title visible" style="opacity: 1; transform: translateY(0);">
-                Portfolio
-            </h1>
+            <h1 class="section-title visible">Portfolio</h1>
             <p style="text-align: center; color: var(--sub-text-color);">
-                포트폴리오 프로젝트
+                학년별 프로젝트 아카이브
             </p>
-
             <div class="filter-buttons">
-                <button class="filter-btn active" data-filter="all">전체보기</button>
-                <button class="filter-btn" data-filter="grade3">3학년</button>
-                <button class="filter-btn" data-filter="grade2">2학년</button>
-                <button class="filter-btn" data-filter="grade1">1학년</button>
+                <button class="filter-btn active" onclick="showGrade('grade3', this)">3학년</button>
+                <button class="filter-btn" onclick="showGrade('grade2', this)">2학년</button>
+                <button class="filter-btn" onclick="showGrade('grade1', this)">1학년</button>
             </div>
         </div>
     </section>
 
     <div class="container portfolio-container">
-        <div class="gallery-grid">
+        
+        <div id="grade3" class="grade-section" style="display:block;">
             
-            <div class="card glass-box" data-category="grade3">
-                <div class="card-img">
-                    <span>IMG (3학년)</span>
+            <h2 class="grade-title">3rd Grade Projects</h2>
+
+            <div class="project-group">
+                <h3 class="project-title">01. AI 캐릭터 생성 프로젝트 <span class="sub-desc">Stable Diffusion 활용</span></h3>
+                <div class="gallery-grid">
+                    
+                    <div class="card glass-box" onclick="openModal(this)"
+                         data-title="AI 캐릭터 (Angle)" data-img="angle.jpg" 
+                         data-desc="AI로 생성한 천사 컨셉 캐릭터입니다." data-tech="#AI #StableDiffusion">
+                        <div class="card-img"><img src="angle.jpg" alt="img"></div>
+                        <h3>AI 캐릭터 (Angle)</h3><p>AI 페르소나</p>
+                    </div>
+
+                    <div class="card glass-box" onclick="openModal(this)"
+                         data-title="AI 캐릭터 (Devil)" data-img="davil.jpg" 
+                         data-desc="AI로 생성한 악마 컨셉 캐릭터입니다." data-tech="#AI #StableDiffusion">
+                        <div class="card-img"><img src="davil.jpg" alt="img"></div>
+                        <h3>AI 캐릭터 (Devil)</h3><p>AI 페르소나</p>
+                    </div>
+
                 </div>
-                <h3>졸업 작품 프로젝트</h3>
-                <p>AI 생성형 영상 제작</p>
-                <span class="grade-tag">3학년</span>
+            </div>
+            <hr class="divider">
+
+            <div class="project-group">
+                <h3 class="project-title">02. 15초 광고 영상 만들기 <span class="sub-desc">영상 편집 및 기획</span></h3>
+                <div class="gallery-grid">
+                    
+                    <div class="card glass-box" onclick="openModal(this)"
+                         data-title="AI 캐릭터 제작 과정" data-video="https://youtu.be/6aAo0BWuJAo" 
+                         data-desc="제작 과정 영상입니다." data-tech="#Video #Edit">
+                        <div class="card-img">
+                            <iframe src="https://www.youtube.com/embed/6aAo0BWuJAo?autoplay=1&mute=1&controls=0&loop=1&playlist=6aAo0BWuJAo" 
+                                    frameborder="0" style="width:100%; height:100%; pointer-events:none;"></iframe>
+                            <div class="video-cover"></div>
+                        </div>
+                        <h3>캐릭터 제작 과정</h3><p>Making Film</p>
+                    </div>
+
+                    <div class="card glass-box" onclick="openModal(this)"
+                         data-title="광고 영상 B" data-img="img_grade3_2.jpg" 
+                         data-desc="두 번째 광고 영상입니다." data-tech="#Video">
+                        <div class="card-img"><img src="img_grade3_2.jpg" alt="img"></div>
+                        <h3>화장품 광고 영상</h3><p>Commercial</p>
+                    </div>
+
+                </div>
+            </div>
             </div>
 
-            <div class="card glass-box" data-category="grade3">
-                <div class="card-img">
-                    <span>IMG (3학년)</span>
-                </div>
-                <h3>UX/UI 디자인 리뉴얼</h3>
-                <p>사용자 경험 중심 설계</p>
-                <span class="grade-tag">3학년</span>
-            </div>
 
-            <div class="card glass-box" data-category="grade2">
-                <div class="card-img">
-                    <span>IMG (2학년)</span>
+        <div id="grade2" class="grade-section" style="display:none;">
+            <h2 class="grade-title">2nd Grade Projects</h2>
+            
+            <div class="project-group">
+                <h3 class="project-title">01. 인터랙티브 웹 구현</h3>
+                <div class="gallery-grid">
+                    <div class="card glass-box" onclick="openModal(this)"
+                         data-title="웹사이트 A" data-img="" data-desc="설명" data-tech="#Web">
+                        <div class="card-img"><span>IMG</span></div>
+                        <h3>반응형 웹사이트</h3><p>HTML/CSS</p>
+                    </div>
                 </div>
-                <h3>인터랙티브 웹 구현</h3>
-                <p>Javascript & Canvas</p>
-                <span class="grade-tag">2학년</span>
             </div>
-
-             <div class="card glass-box" data-category="grade2">
-                <div class="card-img">
-                    <span>IMG (2학년)</span>
-                </div>
-                <h3>모션 그래픽스 기초</h3>
-                <p>After Effects 활용</p>
-                <span class="grade-tag">2학년</span>
-            </div>
-
-            <div class="card glass-box" data-category="grade1">
-                <div class="card-img">
-                    <span>IMG (1학년)</span>
-                </div>
-                <h3>디지털 드로잉 기초</h3>
-                <p>Photoshop & Illustrator</p>
-                <span class="grade-tag">1학년</span>
-            </div>
-
         </div>
+
+
+        <div id="grade1" class="grade-section" style="display:none;">
+            <h2 class="grade-title">1st Grade Projects</h2>
+            
+            <div class="project-group">
+                <h3 class="project-title">01. 기초 디자인</h3>
+                <div class="gallery-grid">
+                     <div class="card glass-box" onclick="openModal(this)"
+                         data-title="드로잉" data-img="" data-desc="설명" data-tech="#Ps">
+                        <div class="card-img"><span>IMG</span></div>
+                        <h3>디지털 드로잉</h3><p>Photoshop</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <footer style="text-align: center; padding: 50px 0; color: #888; font-size: 0.8rem;">
         © 2024 Neural Canvas.
     </footer>
 
+    <div id="portfolioModal" class="modal">
+        <div class="modal-content glass-box">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <div class="modal-body">
+                <div class="modal-img-box">
+                    <img id="modalImg" src="" alt="상세 이미지" style="display:none;"> 
+                    <iframe id="modalVideo" style="display:none; width:100%; height:100%;" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                    <div id="modalImgPlaceholder" style="width:100%; height:100%; background:#eee; display:flex; align-items:center; justify-content:center; color:#888;">이미지 영역</div>
+                </div>
+                <div class="modal-text">
+                    <h2 id="modalTitle">프로젝트 제목</h2>
+                    <p id="modalTech" style="color:var(--primary-color); font-weight:600; margin-bottom:1rem;">#Tag</p>
+                    <hr style="border: 0; border-top: 1px solid #eee; margin: 15px 0;">
+                    <p id="modalDesc" style="line-height: 1.8; color: #444;">설명</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="script.js"></script>
+
+    <script>
+        function showGrade(gradeId, btn) {
+            // 1. 모든 학년 섹션 숨기기
+            const sections = document.querySelectorAll('.grade-section');
+            sections.forEach(sec => sec.style.display = 'none');
+
+            // 2. 선택한 학년만 보이기
+            const selectedSection = document.getElementById(gradeId);
+            if(selectedSection) {
+                selectedSection.style.display = 'block';
+                // 부드럽게 나타나는 효과
+                selectedSection.style.opacity = 0;
+                setTimeout(() => { 
+                    selectedSection.style.opacity = 1; 
+                    selectedSection.style.transition = 'opacity 0.5s ease';
+                }, 10);
+            }
+
+            // 3. 버튼 활성화 스타일 변경
+            const buttons = document.querySelectorAll('.filter-btn');
+            buttons.forEach(b => b.classList.remove('active'));
+            if(btn) btn.classList.add('active');
+        }
+    </script>
 </body>
 </html>

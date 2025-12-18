@@ -269,3 +269,328 @@ body.subpage section {
 html:has(.subpage) {
     overflow-y: auto !important;
 }
+
+/* --- 포트폴리오 상세 팝업 (Modal) 스타일 --- */
+.modal {
+    display: none; /* 기본적으로 숨김 */
+    position: fixed; 
+    z-index: 9999; 
+    left: 0; top: 0;
+    width: 100%; height: 100%; 
+    background-color: rgba(0,0,0,0.6); /* 뒷배경 어둡게 */
+    backdrop-filter: blur(5px); /* 뒷배경 블러 처리 */
+    justify-content: center; 
+    align-items: center;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal-content {
+    width: 90%;
+    max-width: 800px;
+    background: #ffffff;
+    padding: 40px;
+    position: relative;
+    display: flex; /* 이미지와 텍스트 가로 배치 */
+    gap: 30px;
+    align-items: flex-start;
+    max-height: 85vh; /* 화면보다 너무 길어지지 않게 */
+    overflow-y: auto; /* 내용 길면 스크롤 */
+}
+
+.close-btn {
+    position: absolute;
+    top: 20px; right: 25px;
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+    z-index: 10;
+}
+.close-btn:hover { color: var(--primary-color); }
+
+.modal-body { display: flex; width: 100%; gap: 30px; }
+.modal-img-box { flex: 1; height: 300px; border-radius: 12px; overflow: hidden; border: 1px solid #eee; }
+.modal-img-box img { width: 100%; height: 100%; object-fit: cover; }
+.modal-text { flex: 1.2; }
+.modal-text h2 { margin-top: 0; margin-bottom: 10px; font-size: 2rem; color: var(--text-color); }
+
+/* 모바일 대응 */
+@media (max-width: 768px) {
+    .modal-body { flex-direction: column; }
+    .modal-img-box { height: 200px; width: 100%; }
+    .modal-content { padding: 25px; }
+}
+
+/* --- style.css 기존 코드 --- */
+.card-img {
+    height: 220px; background: #f5f5f5; border-radius: 16px;
+    margin-bottom: 1.2rem; display: flex; align-items: center;
+    justify-content: center; overflow: hidden; border: 1px solid #eee;
+    /* ▼ 이 한 줄을 꼭 추가해주세요! (비디오 커버를 위해 필요) ▼ */
+    position: relative;
+}
+
+/* ▼ 아래 코드를 새로 추가해주세요! (비디오 프리뷰 스타일) ▼ */
+.card-img iframe {
+    width: 100%;
+    height: 100%;
+    border: none; /* 테두리 제거 */
+    pointer-events: none; /* 마우스가 유튜브를 조작 못하게 막음 (클릭 시 팝업 뜨게 하기 위함) */
+}
+
+/* 비디오 위에 덮어씌울 투명한 막 (클릭 감지용) */
+.video-cover {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: transparent;
+    z-index: 5; /* iframe 위에 위치 */
+    cursor: pointer;
+}
+
+/* --- [NEW] 학년별 가로 스크롤 레이아웃 스타일 --- */
+
+/* 섹션 간격 */
+.portfolio-section {
+    margin-bottom: 80px;
+    opacity: 0;
+    animation: slideUp 0.8s ease forwards;
+}
+
+/* 제목 스타일 */
+.group-title {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    border-left: 5px solid var(--primary-color);
+    padding-left: 15px;
+    font-weight: 800;
+    color: var(--text-color);
+}
+
+/* ★ 핵심: 가로 스크롤 컨테이너 ★ */
+.scroll-wrapper {
+    display: flex; /* 가로 배치 */
+    gap: 25px; /* 카드 사이 간격 */
+    overflow-x: auto; /* 가로 스크롤 허용 */
+    padding: 10px 5px 30px 5px; /* 그림자 잘리지 않게 여백 */
+    scroll-snap-type: x mandatory; /* 가로로 척척 걸리게 */
+    
+    /* 스크롤바 숨기기 (선택사항) */
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+.scroll-wrapper::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+}
+
+/* 카드 스타일 조정 */
+.portfolio-section .card {
+    min-width: 320px; /* 카드가 찌그러지지 않게 최소 너비 고정 */
+    max-width: 320px;
+    scroll-snap-align: start; /* 스크롤 시 왼쪽에 딱 붙게 */
+    margin: 0; /* 기존 마진 제거 */
+    flex-shrink: 0; /* 줄어들지 않음 */
+}
+
+/* 등장 애니메이션 */
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* 2, 3번째 섹션 딜레이 */
+#grade2 { animation-delay: 0.2s; }
+#grade1 { animation-delay: 0.4s; }
+
+/* --- [NEW] 요약 페이지 & 필터링 스타일 --- */
+
+/* 명예의 전당 (Featured) 그리드 */
+.featured-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); /* 카드를 더 크게 */
+    gap: 30px;
+}
+
+/* 명예의 전당 카드 특별 대우 */
+.featured-card {
+    border: 2px solid rgba(98, 0, 234, 0.3); /* 보라색 테두리로 강조 */
+    background: rgba(255, 255, 255, 0.9);
+}
+.featured-card .card-img {
+    height: 300px; /* 이미지도 더 시원하게 큼 */
+}
+.featured-card h3 {
+    font-size: 1.5rem; /* 제목도 큼 */
+}
+
+/* 필터링 애니메이션 */
+.fade-in {
+    animation: fadeInCard 0.5s ease forwards;
+}
+
+@keyframes fadeInCard {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* 모바일 대응 */
+@media (max-width: 768px) {
+    .featured-grid { grid-template-columns: 1fr; } /* 모바일은 1줄로 */
+    .featured-card .card-img { height: 220px; }
+}
+
+/* --- [NEW] 섹션형 디자인 & 이미지 비율 수정 --- */
+
+/* 1. 이미지 확대 문제 해결 (핵심!) */
+.card-img {
+    width: 100%;
+    height: auto;
+    /* 16:9 비율로 고정 -> 이미지가 너무 확대되지 않고 적당히 보임 */
+    aspect-ratio: 16 / 9; 
+    background: #f5f5f5;
+    border-radius: 16px;
+    margin-bottom: 1.2rem;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid #eee;
+}
+
+/* 이미지가 비율을 유지하면서 꽉 차게 (너무 줌인되면 contain으로 변경 고려) */
+.card-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* 꽉 채우기 */
+    transition: transform 0.5s ease;
+}
+
+/* 마우스 올리면 살짝 확대 (고급짐) */
+.card:hover .card-img img {
+    transform: scale(1.05);
+}
+
+/* 2. 섹션 스타일 */
+.portfolio-section {
+    margin-bottom: 60px;
+    scroll-margin-top: 150px; /* 버튼 클릭 시 헤더에 가리지 않게 */
+}
+
+.group-title {
+    font-size: 1.8rem;
+    margin-bottom: 25px;
+    border-left: 5px solid var(--primary-color);
+    padding-left: 15px;
+    font-weight: 800;
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sub-title {
+    font-size: 1rem;
+    color: #888;
+    font-weight: 500;
+    margin-top: 5px;
+}
+
+.section-divider {
+    border: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, #ddd, transparent);
+    margin: 50px 0;
+}
+
+/* 3. 베스트 태그 스타일 */
+.grade-tag.best {
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    box-shadow: 0 4px 10px rgba(98,0,234,0.3);
+    border: none;
+}
+
+/* --- [NEW] 프로젝트별 그룹화 스타일 --- */
+
+/* 학년 섹션 전체 */
+.grade-section {
+    animation: fadeIn 0.5s ease;
+    padding-bottom: 50px;
+}
+
+/* 학년 대제목 (예: 3rd Grade Projects) */
+.grade-title {
+    font-size: 2.2rem;
+    font-weight: 900;
+    color: var(--text-color);
+    margin-bottom: 60px;
+    text-align: center;
+    background: linear-gradient(transparent 70%, rgba(98, 0, 234, 0.1) 70%);
+    display: inline-block;
+    padding: 0 10px;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* 프로젝트별 그룹 */
+.project-group {
+    margin-bottom: 80px;
+}
+
+/* 프로젝트 소제목 (예: 01. AI 캐릭터 생성) */
+.project-title {
+    font-size: 1.5rem;
+    margin-bottom: 25px;
+    border-left: 5px solid var(--primary-color);
+    padding-left: 15px;
+    font-weight: 800;
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* 소제목 옆의 작은 설명 */
+.sub-desc {
+    font-size: 0.9rem;
+    color: #888;
+    font-weight: 500;
+    background: #f5f5f5;
+    padding: 4px 10px;
+    border-radius: 20px;
+}
+
+/* 프로젝트 사이 구분선 */
+.divider {
+    border: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, #ddd, transparent);
+    margin: 50px 0;
+}
+
+/* 갤러리 그리드 (반응형 유지) */
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 25px;
+}
+
+/* 이미지 비율 고정 (16:9) */
+.card-img {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border-radius: 16px;
+    border: 1px solid #eee;
+    background: #f9f9f9;
+}
+.card-img img, .card-img iframe {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}

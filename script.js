@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
             cursor.style.left = e.clientX + 'px';
             cursor.style.top = e.clientY + 'px';
         });
-        const hoverTargets = document.querySelectorAll('a, button, .glass-box, .video-wrapper, .filter-btn'); // 버튼에도 반응하게 추가
+        const hoverTargets = document.querySelectorAll('a, button, .glass-box, .video-wrapper, .filter-btn, .card'); 
         hoverTargets.forEach(el => {
             el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
             el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }, { threshold: 0.15 });
 
-    const fadeElements = document.querySelectorAll('.section-title, .glass-box, .video-wrapper');
+    const fadeElements = document.querySelectorAll('.section-title, .glass-box, .video-wrapper, .grade-section');
     fadeElements.forEach(el => observer.observe(el));
 
     // 3. 배경 파티클 (Canvas)
@@ -108,70 +108,86 @@ document.addEventListener('DOMContentLoaded', () => {
         window.addEventListener('resize', () => { setCanvasSize(); init(); });
         init(); animate();
     }
-
-    // 4. 포트폴리오 필터링 기능 (새로 추가된 부분)
-    const filterButtons = document.querySelectorAll('.filter-btn');
-    const portfolioItems = document.querySelectorAll('.card');
-
-    if(filterButtons.length > 0) { // 버튼이 있는 페이지에서만 실행
-        filterButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                
-                // 1. 모든 버튼 활성 상태 해제 후 클릭된 버튼 활성화
-                filterButtons.forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
-
-                // 2. 필터 값 가져오기
-                const filterValue = button.getAttribute('data-filter');
-
-                // 3. 필터링 로직 수행
-                portfolioItems.forEach(item => {
-                    if (filterValue === 'all' || item.getAttribute('data-category') === filterValue) {
-                        item.classList.remove('hide');
-                        // 부드러운 등장 애니메이션
-                        item.style.opacity = '0';
-                        setTimeout(() => item.style.opacity = '1', 50);
-                    } else {
-                        item.classList.add('hide');
-                    }
-                });
-            });
-        });
-    }
 });
 
-// --- 포트폴리오 팝업(모달) 기능 ---
+
+/* =========================================
+   ▼ 포트폴리오 팝업(모달) 기능 [핵심 수정됨]
+   ========================================= */
 const modal = document.getElementById("portfolioModal");
 const modalImg = document.getElementById("modalImg");
+const modalVideo = document.getElementById("modalVideo"); // 유튜브용
+const modalLocalVideo = document.getElementById("modalLocalVideo"); // 직접 올린 파일용
 const modalPlaceholder = document.getElementById("modalImgPlaceholder");
+
 const modalTitle = document.getElementById("modalTitle");
 const modalDesc = document.getElementById("modalDesc");
 const modalTech = document.getElementById("modalTech");
 
 // 1. 카드 클릭 시 모달 열기 함수
 function openModal(element) {
-    // 클릭한 카드의 data- 속성값 가져오기
+    // 클릭한 카드의 정보 가져오기
     const title = element.getAttribute('data-title');
     const desc = element.getAttribute('data-desc');
     const imgInfo = element.getAttribute('data-img');
     const tech = element.getAttribute('data-tech');
+    const videoUrl = element.getAttribute('data-video'); // 유튜브 주소
+    const localVideoUrl = element.getAttribute('data-local-video'); // 파일명 (1.MP4)
 
-    // 모달 내용 채우기
-    modalTitle.innerHTML = title ? title : element.querySelector('h3').innerText; // data 없으면 카드 제목 사용
+    // 텍스트 채우기
+    modalTitle.innerHTML = title ? title : element.querySelector('h3').innerText;
     modalDesc.innerHTML = desc ? desc : "상세 설명이 준비 중입니다.";
     modalTech.innerHTML = tech ? tech : "";
 
-    // 이미지 처리 (이미지 파일이 있으면 보여주고, 없으면 회색 박스)
-    if (imgInfo && imgInfo !== "null") {
+    // --- [중요] 어떤 미디어를 보여줄지 결정 ---
+    
+    // 1순위: 직접 올린 동영상 파일 (MP4)
+    if (localVideoUrl && localVideoUrl !== "null") {
+        modalLocalVideo.src = localVideoUrl; // 파일 연결
+        modalLocalVideo.style.display = "block"; // 플레이어 보이기
+        
+        // 나머지는 숨김
+        modalImg.style.display = "none";
+        modalVideo.style.display = "none";
+        modalPlaceholder.style.display = "none";
+    }
+    // 2순위: 유튜브 영상
+    else if (videoUrl && videoUrl !== "null") {
+        // 유튜브 ID 추출 로직
+        let videoId = "";
+        if (videoUrl.includes("v=")) {
+            videoId = videoUrl.split('v=')[1].split('&')[0];
+        } else if (videoUrl.includes("youtu.be/")) {
+            videoId = videoUrl.split('youtu.be/')[1];
+        }
+
+        if (videoId) {
+            modalVideo.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1`;
+            modalVideo.style.display = "block";
+            
+            modalImg.style.display = "none";
+            modalLocalVideo.style.display = "none";
+            modalPlaceholder.style.display = "none";
+        }
+    } 
+    // 3순위: 이미지
+    else if (imgInfo && imgInfo !== "null") {
         modalImg.src = imgInfo;
         modalImg.style.display = "block";
+        
+        modalVideo.style.display = "none";
+        modalLocalVideo.style.display = "none";
         modalPlaceholder.style.display = "none";
-    } else {
+    } 
+    // 4순위: 아무것도 없을 때 (회색박스)
+    else {
         modalImg.style.display = "none";
+        modalVideo.style.display = "none";
+        modalLocalVideo.style.display = "none";
         modalPlaceholder.style.display = "flex";
     }
 
-    // 모달 보여주기
+    // 모달창 띄우기
     modal.style.display = "flex";
     document.body.style.overflow = "hidden"; // 배경 스크롤 막기
 }
@@ -179,7 +195,17 @@ function openModal(element) {
 // 2. 닫기 버튼 기능
 function closeModal() {
     modal.style.display = "none";
-    document.body.style.overflow = "auto"; // 배경 스크롤 풀기
+    document.body.style.overflow = "auto";
+    
+    // 유튜브 끄기 (주소 비우기)
+    if(modalVideo) modalVideo.src = ""; 
+    
+    // 직접 올린 영상 끄기 (일시정지 & 되감기)
+    if(modalLocalVideo) {
+        modalLocalVideo.pause();
+        modalLocalVideo.currentTime = 0;
+        modalLocalVideo.src = ""; // 소스 비워서 완벽하게 정지
+    }
 }
 
 // 3. 배경 클릭 시 닫기
@@ -188,4 +214,3 @@ window.onclick = function(event) {
         closeModal();
     }
 }
-

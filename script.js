@@ -112,7 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 /* =========================================
-   ▼ 포트폴리오 팝업(모달) 기능 [핵심 수정됨]
+   ▼ 포트폴리오 팝업(모달) 기능 [쇼츠 완벽 지원]
    ========================================= */
 const modal = document.getElementById("portfolioModal");
 const modalImg = document.getElementById("modalImg");
@@ -128,36 +128,54 @@ const modalTech = document.getElementById("modalTech");
 function openModal(element) {
     // 클릭한 카드의 정보 가져오기
     const title = element.getAttribute('data-title');
-    const desc = element.getAttribute('data-desc');
+    const desc = element.getAttribute('data-desc'); // 짧은 설명 (backup)
+    const descId = element.getAttribute('data-desc-id'); // [NEW] 긴 설명 ID
+    
     const imgInfo = element.getAttribute('data-img');
     const tech = element.getAttribute('data-tech');
     const videoUrl = element.getAttribute('data-video'); // 유튜브 주소
     const localVideoUrl = element.getAttribute('data-local-video'); // 파일명 (1.MP4)
 
-    // 텍스트 채우기
+    // 제목, 태그 채우기
     modalTitle.innerHTML = title ? title : element.querySelector('h3').innerText;
-    modalDesc.innerHTML = desc ? desc : "상세 설명이 준비 중입니다.";
     modalTech.innerHTML = tech ? tech : "";
 
-    // --- [중요] 어떤 미디어를 보여줄지 결정 ---
+    // 상세 설명 채우기 로직
+    if (descId) {
+        const hiddenContent = document.getElementById(descId);
+        if(hiddenContent) {
+            modalDesc.innerHTML = hiddenContent.innerHTML;
+        } else {
+            modalDesc.innerHTML = "상세 내용을 불러올 수 없습니다.";
+        }
+    } else {
+        modalDesc.innerHTML = desc ? desc : "상세 설명이 준비 중입니다.";
+    }
+
+    // --- 미디어(이미지/동영상) 보여주기 로직 ---
     
     // 1순위: 직접 올린 동영상 파일 (MP4)
     if (localVideoUrl && localVideoUrl !== "null") {
-        modalLocalVideo.src = localVideoUrl; // 파일 연결
-        modalLocalVideo.style.display = "block"; // 플레이어 보이기
+        modalLocalVideo.src = localVideoUrl;
+        modalLocalVideo.style.display = "block";
         
-        // 나머지는 숨김
         modalImg.style.display = "none";
         modalVideo.style.display = "none";
         modalPlaceholder.style.display = "none";
     }
-    // 2순위: 유튜브 영상
+    // 2순위: 유튜브 영상 (일반 영상 + 쇼츠 지원)
     else if (videoUrl && videoUrl !== "null") {
-        // 유튜브 ID 추출 로직
         let videoId = "";
-        if (videoUrl.includes("v=")) {
+        
+        // ★ [여기가 수정되었습니다] 쇼츠 주소도 처리하도록 추가함
+        if (videoUrl.includes("shorts/")) {
+            // 'shorts/' 뒤에 있는 ID 추출 (물음표 뒤에 옵션이 있어도 잘라냄)
+            videoId = videoUrl.split('shorts/')[1].split('?')[0]; 
+        } 
+        else if (videoUrl.includes("v=")) {
             videoId = videoUrl.split('v=')[1].split('&')[0];
-        } else if (videoUrl.includes("youtu.be/")) {
+        } 
+        else if (videoUrl.includes("youtu.be/")) {
             videoId = videoUrl.split('youtu.be/')[1];
         }
 
@@ -179,7 +197,7 @@ function openModal(element) {
         modalLocalVideo.style.display = "none";
         modalPlaceholder.style.display = "none";
     } 
-    // 4순위: 아무것도 없을 때 (회색박스)
+    // 4순위: 아무것도 없을 때
     else {
         modalImg.style.display = "none";
         modalVideo.style.display = "none";
@@ -189,7 +207,7 @@ function openModal(element) {
 
     // 모달창 띄우기
     modal.style.display = "flex";
-    document.body.style.overflow = "hidden"; // 배경 스크롤 막기
+    document.body.style.overflow = "hidden";
 }
 
 // 2. 닫기 버튼 기능
@@ -197,14 +215,14 @@ function closeModal() {
     modal.style.display = "none";
     document.body.style.overflow = "auto";
     
-    // 유튜브 끄기 (주소 비우기)
+    // 유튜브 끄기
     if(modalVideo) modalVideo.src = ""; 
     
-    // 직접 올린 영상 끄기 (일시정지 & 되감기)
+    // 직접 올린 영상 끄기
     if(modalLocalVideo) {
         modalLocalVideo.pause();
         modalLocalVideo.currentTime = 0;
-        modalLocalVideo.src = ""; // 소스 비워서 완벽하게 정지
+        modalLocalVideo.src = ""; 
     }
 }
 
